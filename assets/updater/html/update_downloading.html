@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kick App - Updating</title>
+    <style>
+        body {
+            background-color: #1d1d1d;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .text-container {
+            margin-top: 5%;
+            text-align: center;
+        }
+
+        .text-container h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .text-container p {
+            font-size: 16px;
+            margin-top: 0;
+        }
+
+        .progress-container {
+            width: 50%;
+            height: 5px;
+            background-color: #333333;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #4caf50;
+        }
+
+        .latest-version {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Update the progress bar width based on the download progress
+        ipcRenderer.on('update-progress', (event, progress) => {
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = progress + '%';
+        });
+
+        // Set the latest version number
+        ipcRenderer.on('latest-version', (event, version) => {
+            const versionElement = document.getElementById('version');
+            versionElement.textContent = version;
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <img src="../../icons/app_icon.png" style="width: 80px; height: 80px; border-radius: 20%;" alt="Kick App Logo">
+    <div class="text-container">
+        <h1>Updating Kick App</h1>
+        <p>Please wait while Kick App is being updated to the latest version.</p>
+    </div>
+    <div class="progress-container">
+        <div class="progress-bar" style="width: 0%;"></div>
+    </div>
+    <div class="latest-version">
+        <p>Latest Version: <span id="version"></span></p>
+    </div>
+</div>
+</body>
+</html>
