@@ -1,6 +1,6 @@
 {
   "name": "kickapp",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "src/main.js",
   "description": "The Kick Desktop App",
   "author": "IPEXA",
@@ -31,9 +31,9 @@
     },
     "publish": [
       {
-        "provider": "generic",
-        "url": "https://cdn.ipexa.dev/kick-app/${channel}/updates/v${version}",
-        "channel": "stable"
+        "provider": "github",
+        "owner": "ipexadev",
+        "repo": "kick-app"
       }
     ]
   },
@@ -41,8 +41,8 @@
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "generateyml": "node ./src/generate-versionyml.js",
-    "fullbuild": "node ./src/generate-versionyml.js"
+    "generateyml": "node src/generate-version-yml.js",
+    "fullbuild": "node src/generate-version-yml.js"
   },
   "dependencies": {
     "axios": "^1.4.0",

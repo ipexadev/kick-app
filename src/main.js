@@ -27,16 +27,16 @@ async function startApp() {
         createTray();
         return;
     }
-    /*
+
     autoUpdater.setFeedURL({
         provider: "github",
         owner: `ipexadev`,
         repo: `kick-app`
-    });*/
-    autoUpdater.setFeedURL({
-        provider: "generic",
-        url: 'https://cdn.ipexa.dev/kick-app/stable/updates'
     });
+    /*autoUpdater.setFeedURL({
+        provider: "generic",
+        url: 'https://cdn.ipexa.dev/kick-app/stable/updates/'
+    });*/
 
     try {
 
@@ -181,8 +181,9 @@ function createWindow() {
                         // Just add it to a Set so it only prints once, due to multiple requests being made that starts with that username
                         if (!interceptedUsernames.has(username)) {
                             interceptedUsernames.add(username);
+                            // Grab from MistyKnives Kick API
 
-                            //if(title !== `${username} | Kick`) return;
+                            //if (title !== `${username} | Kick`) return;
 
                             const request = net.request(`https://kick.com/api/v2/channels/${username}`);
                             request.on(`response`, (response) => {
@@ -214,7 +215,7 @@ function createWindow() {
                                         largeImageKey: json.livestream.thumbnail.url,
                                         largeImageText: json.user.username,
                                         smallImageKey: 'app_icon',
-                                        smallImageText: `Kick App ${autoUpdater.currentVersion}`,
+                                        smallImageText: `${app.getVersion()}`,
                                         instance: false,
                                         buttons: [
                                             { label: `Watch Here`, url: `https://kick.com/${username}` },
