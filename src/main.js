@@ -15,7 +15,7 @@ let tray;
 let oldTitle;
 const clientId = `1112901248421732462`;
 DiscordRPC.register(clientId);
-const rpc = new DiscordRPC.Client({ transport: `ipc` });
+const rpc = new DiscordRPC.Client({ transport: 'ipc' });
 
 let updateAvailable = false;
 let updateAccepted = false;
@@ -27,11 +27,15 @@ async function startApp() {
         createTray();
         return;
     }
-
+    /*
     autoUpdater.setFeedURL({
         provider: "github",
         owner: `ipexadev`,
         repo: `kick-app`
+    });*/
+    autoUpdater.setFeedURL({
+        provider: "generic",
+        url: 'https://cdn.ipexa.dev/kick-app/stable/updates'
     });
 
     try {
@@ -158,10 +162,6 @@ function createWindow() {
 
     const interceptedUsernames = new Set();
 
-    /**
-     * KickRPC Created By MistyKnives
-     * https://github.com/MistyKnives/Kick-Discord-RPC for your own livestream RPC :)
-     */
     mainWindow.on(`page-title-updated`, (event, title) => {
         const defaultSession = session.defaultSession;
 
@@ -181,11 +181,10 @@ function createWindow() {
                         // Just add it to a Set so it only prints once, due to multiple requests being made that starts with that username
                         if (!interceptedUsernames.has(username)) {
                             interceptedUsernames.add(username);
-                            // Grab from MistyKnives Kick API
 
-                            if(title !== `${username} | Kick`) return;
+                            //if(title !== `${username} | Kick`) return;
 
-                            const request = net.request(`https://kick.com/api/v1/channels/${username}`);
+                            const request = net.request(`https://kick.com/api/v2/channels/${username}`);
                             request.on(`response`, (response) => {
                                 let data = ``;
 
@@ -202,9 +201,9 @@ function createWindow() {
                                         return;
                                     }
 
-                                    if(json === null) return;
+                                    if (json === null) return;
                                     if (json.message !== null && typeof json.message === `string` && json.message.includes("not found in kick.com`s database")) return;
-                                    if(json.livestream === null) return;
+                                    if (json.livestream === null) return;
 
                                     const startTimestamp = new Date();
 
@@ -214,8 +213,13 @@ function createWindow() {
                                         startTimestamp,
                                         largeImageKey: json.livestream.thumbnail.url,
                                         largeImageText: json.user.username,
+                                        smallImageKey: 'app_icon',
+                                        smallImageText: `Kick App ${autoUpdater.currentVersion}`,
                                         instance: false,
-                                        buttons: [{ label: `Watch Here`, url: `https://kick.com/${username}` }, { label: `Download Kick App`, url: `https://github.com/ipexadev/kick-app/releases/latest` }],
+                                        buttons: [
+                                            { label: `Watch Here`, url: `https://kick.com/${username}` },
+                                            { label: `Download Kick App`, url: `https://github.com/ipexadev/kick-app/releases/latest` }
+                                        ],
                                     });
                                 });
                             });
